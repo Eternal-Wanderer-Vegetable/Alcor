@@ -1,0 +1,43 @@
+P01 validation record
+Date: 2026-10-31 (Asia/Shanghai)
+
+Scope
+P01 Decision API, strict contracts, conservative RulesBackend and policy,
+bounded async engine, HTTP client, and design asset checker. These checks do not
+establish Laya/model quality, Stella/Cometa/Codex integration, QQ/WebChat
+delivery, read-only sandbox behavior, P08 write authorization, or Runtime
+diagnosis/recovery acceptance.
+
+Windows
+Host: Windows 11 Pro for Workstations.
+Project interpreter: CPython 3.12.14 via uv-managed project environment.
+uv: 0.12.5 (210d1f678 2026-08-14 x86_64-pc-windows-msvc).
+Commands and results:
+- `uv run --locked pytest` — 44 passed.
+- `uv run --locked ruff check src tests scripts/check_design_assets.py` — all checks passed.
+- `uv run --locked python scripts/check_design_assets.py` — passed: 2 schemas,
+  2 examples, digest/request binding, 11 work packages, and 56 local links.
+- `uv lock --check` — resolved 36 packages; lock file current.
+
+WSL
+Host: Ubuntu 24.04; host Python 3.12.3; uv 0.12.5.
+Project interpreter: CPython 3.12.14 in `/tmp/alcor-p01-venv` to avoid replacing
+the Windows `.venv` on the shared drive.
+Commands ran from `/mnt/e/stella/Alcor` with
+`UV_PROJECT_ENVIRONMENT=/tmp/alcor-p01-venv`:
+- `uv run --locked pytest` — 44 passed.
+- `uv run --locked ruff check src tests scripts/check_design_assets.py` — all checks passed.
+- `uv run --locked python scripts/check_design_assets.py` — passed: 2 schemas,
+  2 examples, digest/request binding, 11 work packages, and 56 local links.
+- `uv lock --check` — lock file current.
+
+Cross-platform finding
+The first WSL design asset check exposed Windows drive-letter Markdown links that
+were incorrectly interpreted as relative paths on Linux. The checker now maps
+`E:/...` links to `/mnt/e/...` on non-Windows hosts while retaining native
+Windows path resolution. The final Windows and WSL checker runs both pass.
+
+Boundary
+These are local implementation and artifact checks only. They are not model
+calibration, host integration, platform delivery, production service, or live
+runtime acceptance.

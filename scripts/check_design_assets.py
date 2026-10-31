@@ -1,12 +1,12 @@
-"""Validate planning assets only; does not exercise a service or a model."""
+"""Validate schemas, planning metadata, and local links without exercising a service."""
 
 import hashlib
 import json
-from pathlib import Path
+import os
 import re
+from pathlib import Path
 
 from jsonschema import Draft202012Validator
-
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -25,8 +25,11 @@ def main():
     request = read_json(ROOT / "examples/decision-request.json")
     response = read_json(ROOT / "examples/decision-response.json")
     canonical = json.dumps(
-        request["context"], ensure_ascii=False, sort_keys=True,
-        separators=(",", ":"), allow_nan=False,
+        request["context"],
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+        allow_nan=False,
     ).encode("utf-8")
     digest = hashlib.sha256(canonical).hexdigest()
     assert request["context_digest"] == digest, "request context digest mismatch"
@@ -36,7 +39,15 @@ def main():
     features = read_json(ROOT / "feature_list.json")["features"]
     assert len({f["id"] for f in features}) == len(features), "duplicate feature ID"
     for feature in features:
-        assert feature["status"] in {"documented", "planned", "blocked"}
+        assert feature["status"] in {
+            "documented",
+            "planned",
+            "in_progress",
+            "implemented",
+            "blocked",
+        }
+        if feature["status"] == "implemented":
+            assert feature.get("evidence"), f"implemented feature lacks evidence: {feature['id']}"
         for dep in feature["depends_on"]:
             assert dep in {f["id"] for f in features}, f"missing dependency: {dep}"
     assert all(f["status"] != "documented" for f in features if f["id"] != "P00")
@@ -52,11 +63,24 @@ def main():
             target = re.sub(r":\d+$", "", target)
             if target.startswith("/E:/"):
                 target = target[1:]
-            resolved = Path(target) if re.match(r"[A-Za-z]:[/\\]", target) else path.parent / target
+            windows_path = re.match(r"^([A-Za-z]):[/\\](.*)$", target)
+            if windows_path:
+                drive, suffix = windows_path.groups()
+                suffix = suffix.replace("\\", "/")
+                resolved = (
+                    Path(f"{drive}:/{suffix}")
+                    if os.name == "nt"
+                    else Path("/mnt") / drive.lower() / suffix
+                )
+            else:
+                resolved = Path(target) if Path(target).is_absolute() else path.parent / target
             assert resolved.exists(), f"missing local link in {path}: {target}"
             links += 1
-    print(f"PASS: 2 schemas, 2 examples, digest binding, {len(features)} work packages, {links} local links")
-    print("Scope: design assets only; no service/model/host/runtime acceptance")
+    print(
+        f"PASS: 2 schemas, 2 examples, digest binding, "
+        f"{len(features)} work packages, {links} local links"
+    )
+    print("Scope: schema and plan-state consistency only; no model/host/runtime acceptance")
 
 
 if __name__ == "__main__":

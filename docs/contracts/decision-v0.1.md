@@ -1,6 +1,10 @@
 # Alcor 决策协议 v0.1
 
-状态：设计草案；尚未实现 HTTP 服务。JSON Schema 是字段级约束，本文件规定跨字段与宿主语义。协议版本、问题模板版本、模型版本和校准版本分别演进。
+状态：协议 v0.1 草案，P01 已提供可运行类型与本地 API。JSON Schema 是字段级约束，本文件规定跨字段与宿主语义。协议版本、问题模板版本、模型版本和校准版本分别演进。
+
+当前 RulesBackend 是可解释的开发基线，没有模型、tokenizer 或校准概率。API 只给出语义建议；
+宿主仍须独立验证 principal、工作区、profile、权限、幂等键和 backend 状态。Alcor 不提交
+Cometa 任务，也不启动 Codex。
 
 ## API
 
@@ -11,6 +15,14 @@
 - 首个请求体上限拟定64KiB；文本长度与实际token数另计；不可用字符上限充当模型token预算。
 - 超时设置使用客户端传入的相对 `deadline_ms`，服务端取自身上限与该值的较小值，并在入口转成 monotonic deadline；排队消耗同一个预算。
 - API重放纯判断无副作用，但宿主不得把同一决策响应重复转成不同任务。
+
+P01 当前服务将 body 限制为64KiB，默认服务端决策 deadline 为800ms、队列等待上限100ms、
+单 worker 并发为1、等待队列容量为8。等待与推理共用 deadline_ms 预算。业务超时、队列满、
+规则/后端故障及截断均以 HTTP 200 返回 status=unknown 和 recommendation=abstain/none/none；
+请求格式错误仍为 422，超大 body 为 413。
+
+GET /health/live 仅表示 API 进程可响应；GET /health/ready 检查当前 backend；
+GET /v1/metadata 返回有效 backend 版本、bundle 摘要及已知的 tokenizer/calibration 信息。
 
 ## 请求结构
 
