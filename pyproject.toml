@@ -1,0 +1,40 @@
+[build-system]
+requires = ["hatchling>=1.27,<2"]
+build-backend = "hatchling.build"
+
+[project]
+name = "alcor-decision-engine"
+version = "0.1.0"
+description = "A conservative, backend-neutral decision service for agent delegation."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+  "fastapi>=0.162,<1",
+  "httpx>=0.28.1,<1",
+  "pydantic>=2.14,<3",
+]
+
+[project.optional-dependencies]
+server = ["uvicorn[standard]>=0.30,<1"]
+
+[dependency-groups]
+dev = [
+  "jsonschema>=4.23,<5",
+  "pytest>=8,<10",
+  "ruff>=0.12,<1",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/alcor"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]

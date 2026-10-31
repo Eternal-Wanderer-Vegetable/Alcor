@@ -2,7 +2,7 @@
   "schema_version": "0.1",
   "project": "Alcor",
   "updated_at": "2026-10-31",
-  "scope": "engineering plan; no runtime implementation",
+  "scope": "P01 service implementation; no model, host, or runtime acceptance",
   "features": [
     {
       "id": "P00",
@@ -19,9 +19,21 @@
       "depends_on": [
         "P00"
       ],
-      "status": "planned",
+      "status": "implemented",
       "objective": "轻量协议/API/RulesBackend/client及故障契约",
-      "evidence": []
+      "evidence": [
+        "pyproject.toml",
+        "uv.lock",
+        "src/alcor/contracts.py",
+        "src/alcor/backends/",
+        "src/alcor/policy.py",
+        "src/alcor/engine.py",
+        "src/alcor/api.py",
+        "src/alcor/client.py",
+        "tests/",
+        "scripts/check_design_assets.py",
+        "evidence/p01-validation.txt"
+      ]
     },
     {
       "id": "P02",

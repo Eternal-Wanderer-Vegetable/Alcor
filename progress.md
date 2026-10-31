@@ -4,25 +4,35 @@
 
 ## 本轮范围与结果
 
-根据分享讨论最终选择，形成独立外部决策引擎工程方案，首期聚焦Stella自然委派Codex。已完成协议草案、schema/示例、数据与评测规范、Runtime独立工作包、当前源码及上游研究核对、工作包依赖登记。
+按工程方案完成 P01：建立轻量 Python 服务、严格协议类型、RulesBackend、策略组合、API 与异步 client。没有安装 torch、下载模型权重，也没有改动 Stella 工作区。
 
-P00状态为`documented`，只表示设计资产已交付；P01及后续运行能力未实现。Alcor当前不是Git仓库，未创建提交或远程仓库。
+P00 设计资产在本轮开始时提交为基线 `b18c62a`（`docs: establish Alcor P00 design baseline`）。本地分支为 `codex/alcor-p01-decision-api`。P01 阶段提交与验证证据见 Git 历史及 [P01 验证记录](evidence/p01-validation.txt)。
 
-## 验证证据
+## P01 交付
 
-- 浏览器读取分享讨论全部三轮；以最后的外部决策模型选择为基线。
-- WSL GitNexus 1.6.12绑定`/mnt/e/stella/stella_project`，索引HEAD与源码HEAD `cf630612c05f8ff9f7c8c61192b060c77b676856`一致；query/context加源码复核。Docker查询超时，仅使用备用路径，没有重启服务。
-- [源码快照](evidence/source-snapshot.json)记录引用文件SHA256、分支与已有修改；未改动Stella。
-- `python scripts/check_design_assets.py`：结果记录于[evidence/design-validation.txt](evidence/design-validation.txt)。这是设计资产检查，不是服务或模型测试。
+- `pyproject.toml`、`uv.lock`、`.python-version`：Python 3.12 工程及跨平台锁定依赖。
+- `src/alcor/contracts.py`：严格请求/响应、规范化上下文摘要、proposal 同用户绑定和跨字段约束。
+- `src/alcor/backends/`、`src/alcor/policy.py`：未校准的规则基线与保守宿主事实组合。
+- `src/alcor/engine.py`：共享 deadline、单并发 worker、有界队列，以及 timeout/busy/backend failure 的 abstain 结果。
+- `src/alcor/api.py`、`src/alcor/client.py`：Decision API、健康/metadata 端点、body 限制和请求/响应绑定 client。
+- `tests/`：fake backend、API、client、跨请求隔离、JSON/schema 边界和故障契约覆盖。
 
-未运行：Laya加载/推理/训练、真实Codex任务、宿主API/QQ/WebChat、只读沙盒、写入审批、llama.cpp故障复现与恢复。上线结论为 **NOT READY**。
+规则 backend 没有校准概率；API 的 delegate 只是语义建议，不能授权或提交任务。没有接入 Stella、Cometa、Codex 或 QQ。
 
-## 下一轮唯一主任务
+## 验证范围
 
-从P01建立轻量Python工程、contracts、RulesBackend、API和client，不先安装torch或下载权重。实现schema之外的跨字段与上下文绑定校验、deadline/busy/unknown行为。P02人工裁决可独立开展，先冻结标签与family划分。
+Windows Python 3.12 与 WSL Ubuntu Python 3.12 均运行 P01 契约测试、Ruff 和设计资产检查。详细命令、版本、测试数及最初暴露并修复的 WSL 盘符链接问题记录在 `evidence/p01-validation.txt`。
 
-进入P03前需要P02数据；进入真实只读灰度前需要P05/P06和只读profile映射。P08暂阻塞：当前Cometa Codex后端未提供人工审批通道，inspect/modify也需显式映射可信profile。不得靠模型建议或可写默认profile绕过。
+设计资产检查只验证 schema、示例、任务状态和本地链接；P01 测试只证明当前 API/client 与 RulesBackend 契约，不证明真实模型或平台运行质量。
+
+## 尚未完成的工作
+
+- P02 仍需人工裁决 500 个案例及锁定 family split；不得用模型生成标签代替裁决。
+- P03 需 P02 数据及固定 Laya checkpoint 后才能做零样本对照与 CPU/长度实测。
+- P04/P05 合成数据、训练、校准与发布 bundle 尚未开始。
+- P06/P07 Stella shadow、真实只读 profile、sandbox、幂等恢复和 QQ/WebChat 回投尚未实现或验收。
+- P08 仍受审批与写入授权链缺失限制。R01/R02 Runtime 诊断与恢复未运行。
 
 ## 恢复工作时先读
 
-先读[README](README.md)、[主方案](docs/plans/2026-10-31-alcor-engineering-plan.md)、[协议](docs/contracts/decision-v0.1.md)、[feature_list](feature_list.json)。如涉及Stella集成，重新读取其AGENTS并检查工作区/索引新鲜度，编辑前执行对应图影响分析。旧测试、图和上游版本不得自动视为最新验收。
+先读 [工程实施方案](docs/plans/2026-10-31-alcor-engineering-plan.md)、[协议](docs/contracts/decision-v0.1.md)、[数据与评测方案](docs/evaluation/data-and-evaluation.md)、[可跟踪任务](feature_list.json)。下一阶段是 P02 的人工标注与 split 冻结；P01 API 不能替代后续离线模型、宿主准入或实地验收。
