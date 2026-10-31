@@ -1,0 +1,108 @@
+{
+  "schema_version": "0.1",
+  "project": "Alcor",
+  "updated_at": "2026-10-31",
+  "scope": "engineering plan; no runtime implementation",
+  "features": [
+    {
+      "id": "P00",
+      "depends_on": [],
+      "status": "documented",
+      "objective": "设计与来源资产，运行验收未完成",
+      "evidence": [
+        "docs/plans/2026-10-31-alcor-engineering-plan.md",
+        "docs/contracts/decision-v0.1.md"
+      ]
+    },
+    {
+      "id": "P01",
+      "depends_on": [
+        "P00"
+      ],
+      "status": "planned",
+      "objective": "轻量协议/API/RulesBackend/client及故障契约",
+      "evidence": []
+    },
+    {
+      "id": "P02",
+      "depends_on": [
+        "P00"
+      ],
+      "status": "planned",
+      "objective": "500例人工裁决与family隔离split",
+      "evidence": []
+    },
+    {
+      "id": "P03",
+      "depends_on": [
+        "P01",
+        "P02"
+      ],
+      "status": "planned",
+      "objective": "Laya零样本与规则对照，中文/长度/CPU实测",
+      "evidence": []
+    },
+    {
+      "id": "P04",
+      "depends_on": [
+        "P03"
+      ],
+      "status": "planned",
+      "objective": "3000候选合成、复核、训练export",
+      "evidence": []
+    },
+    {
+      "id": "P05",
+      "depends_on": [
+        "P04"
+      ],
+      "status": "planned",
+      "objective": "训练、联合概率校准、整体bundle与评测",
+      "evidence": []
+    },
+    {
+      "id": "P06",
+      "depends_on": [
+        "P03"
+      ],
+      "status": "planned",
+      "objective": "Stella off/shadow及追踪绑定",
+      "evidence": []
+    },
+    {
+      "id": "P07",
+      "depends_on": [
+        "P05",
+        "P06"
+      ],
+      "status": "planned",
+      "objective": "只读profile、真实sandbox、灰度与回投",
+      "evidence": []
+    },
+    {
+      "id": "P08",
+      "depends_on": [
+        "P07"
+      ],
+      "status": "blocked",
+      "objective": "写入范围授权与审批能力尚待实现",
+      "evidence": []
+    },
+    {
+      "id": "R01",
+      "depends_on": [],
+      "status": "planned",
+      "objective": "实际llama.cpp故障实例的只读诊断与复现",
+      "evidence": []
+    },
+    {
+      "id": "R02",
+      "depends_on": [
+        "R01"
+      ],
+      "status": "planned",
+      "objective": "Runtime恢复机制及Windows/Linux验收",
+      "evidence": []
+    }
+  ]
+}

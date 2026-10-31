@@ -1,0 +1,92 @@
+{
+  "date": "2026-10-31",
+  "scope": "read-only source and graph review; not runtime acceptance",
+  "repo_path": "E:\\stella\\stella_project",
+  "head": "cf630612c05f8ff9f7c8c61192b060c77b676856",
+  "branch": "codex/outbound-send-logging",
+  "existing_worktree_status": [
+    "M corona/config_api.py",
+    " M docs/development/deployment.en.md",
+    " M docs/development/deployment.md",
+    " M feature_list.json",
+    " M progress.md",
+    " M session-handoff.md",
+    " M tests/corona/test_config_api.py",
+    "?? extensions/ligamina_bridge/",
+    "?? scripts/start_managed_stella.ps1"
+  ],
+  "graph_runner": "GitNexus 1.6.12 in WSL",
+  "graph_binding": "/mnt/e/stella/stella_project",
+  "graph_metadata": {
+    "repoPath": "/mnt/e/stella/stella_project",
+    "lastCommit": "cf630612c05f8ff9f7c8c61192b060c77b676856",
+    "indexedAt": "2026-10-29T10:31:12.540Z",
+    "branch": "codex/outbound-send-logging",
+    "stats": {
+      "files": 2061,
+      "nodes": 119491,
+      "edges": 301820,
+      "communities": 1231,
+      "processes": 800,
+      "embeddings": 0
+    }
+  },
+  "docker_fallback_reason": "stella-gitnexus list timed out after 12 seconds",
+  "source_files": [
+    {
+      "path": "capability/delegation.py",
+      "sha256": "330d97327e38d9440f766ce17863f5ae6636da68e9b1c1bf2c2c290db26596b8",
+      "bytes": 17392
+    },
+    {
+      "path": "capability/hooks.py",
+      "sha256": "30d1c0c0a0d25040a688b827ba3c588606815f54ba14e19efcbdca895316f116",
+      "bytes": 22185
+    },
+    {
+      "path": "capability/router/__init__.py",
+      "sha256": "8a57cae2754d55a8ea5b30505b61bf5dba06675b15ab3d056ee89dac0845b4e7",
+      "bytes": 7199
+    },
+    {
+      "path": "cometa/models.py",
+      "sha256": "03d18a656a9e5b241119032ceea51d163256bbbe9e7722ec58a7d7acffaa9f14",
+      "bytes": 28623
+    },
+    {
+      "path": "cometa/service.py",
+      "sha256": "bd51ca625dcde43062308e3676a046ab0f591f285cc24f552eed8bb19b052997",
+      "bytes": 15816
+    },
+    {
+      "path": "cometa/policy.py",
+      "sha256": "32b04e370b403f6d9a14849ff21da34a5c3c9dece952ffe3a05609dfb4299eb2",
+      "bytes": 5923
+    },
+    {
+      "path": "cometa/config.py",
+      "sha256": "6979b24c2afd1c7f9bfac4ec402da7c72303097ddd000398d4180d19bed225f3",
+      "bytes": 19755
+    },
+    {
+      "path": "cometa/backends/codex.py",
+      "sha256": "a1c6641cbf3a2f4370ec9410ac28766c1f64ef11b96c11f0f999252bae114cec",
+      "bytes": 12843
+    },
+    {
+      "path": "deploy/llama.py",
+      "sha256": "5edb565d4ef8e193b7d051921ae6de9ee8e95f61dc3de46d9dfb21b00cf357f8",
+      "bytes": 9281
+    },
+    {
+      "path": "deploy/runtime.py",
+      "sha256": "476d8140ed3049b8a86edfae724ab1e23c1bef9582f7d6350c2936be10c8c633",
+      "bytes": 30601
+    },
+    {
+      "path": "core/context_budget.py",
+      "sha256": "a353c4d7c772bcf1ce45df24b552ac5fa81288650472698bb89a3fae4e2a6797",
+      "bytes": 13140
+    }
+  ]
+}

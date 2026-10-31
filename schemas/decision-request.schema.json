@@ -1,0 +1,236 @@
+{
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "0.1"
+    },
+    "request_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "context_digest": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "deadline_ms": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 2000
+    },
+    "context": {
+      "type": "object",
+      "properties": {
+        "current_message": {
+          "type": "object",
+          "properties": {
+            "message_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "speaker_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "role": {
+              "type": "string",
+              "enum": [
+                "user",
+                "assistant",
+                "system"
+              ]
+            },
+            "source_kind": {
+              "type": "string",
+              "enum": [
+                "direct",
+                "quoted",
+                "notification",
+                "agent_result"
+              ]
+            },
+            "text": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 16000
+            }
+          },
+          "required": [
+            "message_id",
+            "speaker_id",
+            "role",
+            "source_kind",
+            "text"
+          ],
+          "additionalProperties": false
+        },
+        "history": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "message_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              "speaker_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              "role": {
+                "type": "string",
+                "enum": [
+                  "user",
+                  "assistant",
+                  "system"
+                ]
+              },
+              "source_kind": {
+                "type": "string",
+                "enum": [
+                  "direct",
+                  "quoted",
+                  "notification",
+                  "agent_result"
+                ]
+              },
+              "text": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 16000
+              }
+            },
+            "required": [
+              "message_id",
+              "speaker_id",
+              "role",
+              "source_kind",
+              "text"
+            ],
+            "additionalProperties": false
+          },
+          "maxItems": 32
+        },
+        "proposal": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "proposal_id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                },
+                "owner_id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                },
+                "revision": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "content_digest": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                },
+                "scope": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 2000
+                },
+                "message_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128
+                  },
+                  "maxItems": 16
+                }
+              },
+              "required": [
+                "proposal_id",
+                "owner_id",
+                "revision",
+                "content_digest",
+                "scope",
+                "message_ids"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "integrity": {
+          "type": "string",
+          "enum": [
+            "complete",
+            "budget_exceeded",
+            "missing_reference",
+            "unknown"
+          ]
+        },
+        "host_facts": {
+          "type": "object",
+          "properties": {
+            "trigger": {
+              "type": "string",
+              "enum": [
+                "reply",
+                "proactive",
+                "passive",
+                "notification"
+              ]
+            },
+            "workspace_bound": {
+              "type": "boolean"
+            },
+            "coding_agent_state": {
+              "type": "string",
+              "enum": [
+                "ready",
+                "unavailable",
+                "unknown"
+              ]
+            },
+            "deterministic_local_tool": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "trigger",
+            "workspace_bound",
+            "coding_agent_state",
+            "deterministic_local_tool"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "current_message",
+        "history",
+        "proposal",
+        "integrity",
+        "host_facts"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schema_version",
+    "request_id",
+    "context_digest",
+    "deadline_ms",
+    "context"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Alcor DecisionRequest v0.1"
+}

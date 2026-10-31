@@ -1,0 +1,2 @@
+PASS: 2 schemas, 2 examples, digest binding, 11 work packages, 40 local links
+Scope: design assets only; no service/model/host/runtime acceptance

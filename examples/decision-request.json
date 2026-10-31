@@ -1,0 +1,24 @@
+{
+  "schema_version": "0.1",
+  "request_id": "example-request-1",
+  "context_digest": "eaf9f979292bd0519b36009189580b53fbc6c3efc8c6a1efd6e845b412176edc",
+  "deadline_ms": 800,
+  "context": {
+    "current_message": {
+      "message_id": "m2",
+      "speaker_id": "u1",
+      "role": "user",
+      "source_kind": "direct",
+      "text": "帮我查一下已绑定仓库里的内存泄漏，只调查，不修改文件。"
+    },
+    "history": [],
+    "proposal": null,
+    "integrity": "complete",
+    "host_facts": {
+      "trigger": "reply",
+      "workspace_bound": true,
+      "coding_agent_state": "ready",
+      "deterministic_local_tool": false
+    }
+  }
+}

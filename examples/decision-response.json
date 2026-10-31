@@ -1,0 +1,35 @@
+{
+  "schema_version": "0.1",
+  "request_id": "example-request-1",
+  "context_digest": "eaf9f979292bd0519b36009189580b53fbc6c3efc8c6a1efd6e845b412176edc",
+  "status": "decided",
+  "assessment": {
+    "intent": "execute",
+    "task_kind": "repository_inspection",
+    "execution_mode": "inspect",
+    "reference_status": "complete",
+    "request_relation": "self_request"
+  },
+  "recommendation": {
+    "action": "delegate",
+    "target": "coding_agent",
+    "mode": "inspect"
+  },
+  "delegation_probability": null,
+  "calibration_id": null,
+  "reason_codes": [
+    "execution_requested"
+  ],
+  "evidence_message_ids": [
+    "m2"
+  ],
+  "versions": {
+    "backend": "example-only",
+    "model": "none",
+    "template": "codex-intent-v0.1",
+    "normalizer": "context-v0.1",
+    "policy": "shadow-v0.1",
+    "bundle": "example-not-released"
+  },
+  "elapsed_ms": 0
+}

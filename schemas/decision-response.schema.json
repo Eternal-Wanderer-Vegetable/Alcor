@@ -1,0 +1,406 @@
+{
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "0.1"
+    },
+    "request_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "context_digest": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "decided",
+        "unknown"
+      ]
+    },
+    "assessment": {
+      "type": "object",
+      "properties": {
+        "intent": {
+          "type": "string",
+          "enum": [
+            "chat",
+            "discuss",
+            "explain",
+            "execute",
+            "unknown"
+          ]
+        },
+        "task_kind": {
+          "type": "string",
+          "enum": [
+            "knowledge",
+            "code_sample",
+            "repository_inspection",
+            "repository_change",
+            "research",
+            "unknown"
+          ]
+        },
+        "execution_mode": {
+          "type": "string",
+          "enum": [
+            "none",
+            "inspect",
+            "modify",
+            "unknown"
+          ]
+        },
+        "reference_status": {
+          "type": "string",
+          "enum": [
+            "complete",
+            "missing",
+            "ambiguous"
+          ]
+        },
+        "request_relation": {
+          "type": "string",
+          "enum": [
+            "self_request",
+            "quotation",
+            "hypothetical",
+            "unknown"
+          ]
+        }
+      },
+      "required": [
+        "intent",
+        "task_kind",
+        "execution_mode",
+        "reference_status",
+        "request_relation"
+      ],
+      "additionalProperties": false
+    },
+    "recommendation": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "type": "string",
+          "enum": [
+            "chat",
+            "delegate",
+            "clarify",
+            "abstain"
+          ]
+        },
+        "target": {
+          "type": "string",
+          "enum": [
+            "none",
+            "coding_agent"
+          ]
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "none",
+            "inspect",
+            "modify"
+          ]
+        }
+      },
+      "required": [
+        "action",
+        "target",
+        "mode"
+      ],
+      "additionalProperties": false
+    },
+    "delegation_probability": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 1
+    },
+    "calibration_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "reason_codes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "discussion_only",
+          "knowledge_or_example",
+          "execution_requested",
+          "missing_context",
+          "ambiguous_reference",
+          "quoted_or_hypothetical",
+          "local_tool_available",
+          "backend_unavailable",
+          "unsupported_scope",
+          "context_budget_exceeded",
+          "upstream_truncated",
+          "low_confidence",
+          "inconsistent_assessment",
+          "backend_timeout",
+          "backend_busy",
+          "invalid_backend_response",
+          "version_mismatch",
+          "missing_metadata",
+          "untrusted_trigger",
+          "unknown"
+        ]
+      },
+      "minItems": 1,
+      "maxItems": 8,
+      "uniqueItems": true
+    },
+    "evidence_message_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 128
+      },
+      "maxItems": 16
+    },
+    "versions": {
+      "type": "object",
+      "properties": {
+        "backend": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "model": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "template": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "normalizer": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "policy": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "bundle": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        }
+      },
+      "required": [
+        "backend",
+        "model",
+        "template",
+        "normalizer",
+        "policy",
+        "bundle"
+      ],
+      "additionalProperties": false
+    },
+    "elapsed_ms": {
+      "type": "number",
+      "minimum": 0
+    }
+  },
+  "required": [
+    "schema_version",
+    "request_id",
+    "context_digest",
+    "status",
+    "assessment",
+    "recommendation",
+    "delegation_probability",
+    "calibration_id",
+    "reason_codes",
+    "evidence_message_ids",
+    "versions",
+    "elapsed_ms"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Alcor DecisionResponse v0.1",
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "unknown"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "recommendation": {
+            "properties": {
+              "action": {
+                "const": "abstain"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "recommendation": {
+            "properties": {
+              "action": {
+                "const": "delegate"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "status": {
+            "const": "decided"
+          },
+          "recommendation": {
+            "properties": {
+              "target": {
+                "const": "coding_agent"
+              },
+              "mode": {
+                "type": "string",
+                "enum": [
+                  "inspect",
+                  "modify"
+                ]
+              }
+            }
+          },
+          "assessment": {
+            "properties": {
+              "intent": {
+                "const": "execute"
+              },
+              "reference_status": {
+                "const": "complete"
+              },
+              "request_relation": {
+                "const": "self_request"
+              }
+            }
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "recommendation": {
+            "properties": {
+              "target": {
+                "const": "none"
+              },
+              "mode": {
+                "const": "none"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "recommendation": {
+            "properties": {
+              "mode": {
+                "const": "inspect"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "assessment": {
+            "properties": {
+              "task_kind": {
+                "const": "repository_inspection"
+              },
+              "execution_mode": {
+                "const": "inspect"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "recommendation": {
+            "properties": {
+              "mode": {
+                "const": "modify"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "assessment": {
+            "properties": {
+              "task_kind": {
+                "const": "repository_change"
+              },
+              "execution_mode": {
+                "const": "modify"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "delegation_probability": {
+            "type": "null"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "calibration_id": {
+            "type": "null"
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "calibration_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          }
+        }
+      }
+    }
+  ]
+}
